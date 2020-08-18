@@ -1,3 +1,9 @@
 import pandas as pd
-df = pd.read_csv('Dataset\dataset\AspectJ.txt', sep="\t")
-df.to_csv('Dataset\dataset\AspectJ.csv', index=False)
+from glob import glob
+import re
+path = '..\Dataset\dataset\*.txt'
+files = glob(path)
+print(files)
+for file in files:
+  df = pd.read_csv(file, sep="\t")
+  df.to_csv(re.sub(".txt", ".csv", file), index=False) 
