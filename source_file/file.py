@@ -35,7 +35,6 @@ def listFileInBug(link,id,path_root):
     list_link = divide_link(link)
     for i in list_link:
         s.append(os.path.join(path_root,clean(i,id)))
-
     return s
 
 # 
