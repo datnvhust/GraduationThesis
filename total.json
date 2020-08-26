@@ -1,7 +1,33 @@
 {
-    "AspectJ" : [593, 471 ],
-    "Eclipse_Platform_UI" : [6495 ],
-    "JDT" : [6274 ],
-    "SWT" : [4151 ],
-    "Tomcat" : [1056 ]
+    "AspectJ": {
+        "row_bugs": 593,
+        "row+bugs_desc": 471,
+        "max_file": 87,
+        "max_file_bug_id": 108120
+    },
+    "Eclipse_Platform_UI": {
+        "row_bugs": 6495,
+        "row+bugs_desc": 5252,
+        "max_file": 202,
+        "max_file_bug_id": 123442
+    },
+    "JDT": {
+        "row_bugs": 6274,
+        "row+bugs_desc": 5351,
+        "max_file": 80,
+        "max_file_bug_id": 77950
+    },
+    "SWT": {
+        "row_bugs": 4151,
+        "row+bugs_desc": 3268,
+        "max_file": 215,
+        "max_file_bug_id": 269106
+    },
+    "Tomcat": {
+        "row_bugs": 1056,
+        "row+bugs_desc": 528,
+        "max_file": 51,
+        "max_file_bug_id": 49142,
+        "source_length": 2567
+    }
 }

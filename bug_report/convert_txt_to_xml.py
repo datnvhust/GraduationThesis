@@ -48,6 +48,8 @@ data_id = data["bug_id"]
 data_opendate = data["report_time"]
 data_fixdate = data["report_time"]
 count = 0
+max_file = 0
+bug_id = 0
 for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description, data_id, data_opendate, data_fixdate):
     if(not desc or pd.isnull(desc)):
         continue
@@ -72,6 +74,9 @@ for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description,
 
     # print(divide_link(files))
     array_file = divide_link(files)
+    if(len(array_file) > max_file):
+        max_file = len(array_file)
+        bug_id = i
     for file_ in array_file:
         file_name = ET.SubElement(fixedFiles, 'file')
         file_name.text = file_
@@ -81,6 +86,8 @@ for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description,
     # print(desc)
 
 print("count", count)
+print("max_length", max_file)
+print("bug_id", bug_id)
 mydata = ET.tostring(bugrepository)
 
 # print(mydata)
