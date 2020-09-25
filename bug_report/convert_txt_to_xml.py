@@ -51,8 +51,8 @@ count = 0
 max_file = 0
 bug_id = 0
 for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description, data_id, data_opendate, data_fixdate):
-    if(not desc or pd.isnull(desc)):
-        continue
+    # if(not desc or pd.isnull(desc)):
+    #     continue
 
     count += 1
     # bug
@@ -68,7 +68,7 @@ for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description,
     summary = ET.SubElement(buginformation, 'summary')
     description = ET.SubElement(buginformation, 'description')
     summary.text = summ
-    description.text = unescape(desc)
+    description.text = '' if (not desc or pd.isnull(desc)) else unescape(desc)
     # source
     fixedFiles = ET.SubElement(bug, 'fixedFiles')
 
@@ -91,5 +91,5 @@ print("bug_id", bug_id)
 mydata = ET.tostring(bugrepository)
 
 # print(mydata)
-myfile = open("AspectJ.xml", "wb")
+myfile = open("AspectJ_v2.xml", "wb")
 myfile.write(mydata)
