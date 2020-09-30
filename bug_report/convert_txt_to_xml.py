@@ -55,7 +55,8 @@ bug_id = 0
 for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, data_description, data_id, data_opendate, data_fixdate, data_commit, data_status):
     # if(not desc or pd.isnull(desc)):
     #     continue
-
+    if status not in ['resolved fixed', 'verified fixed', 'closed fixed']:
+        continue
     count += 1
     # bug
     # print(i, o, f)

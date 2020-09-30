@@ -2928,15 +2928,6 @@
             <file>org.aspectj.ajdt.core/testsrc/org/aspectj/tools/ajc/AjASTTest.java</file>
         </fixedFiles>
     </bug>
-    <bug commit="4934132" fixdate="1138620000" id="125657" opendate="1138580000" status="resolved wontfix">
-        <buginformation>
-            <summary>Bug 125657 NullPointerException from BcelShadow.java:1313</summary>
-            <description>From within Eclipse 3.0 (RAD 6.0.1) I get an error with the (partial) details listed below. My aspect looks like this: public aspect AAwtEventDispatcherThreadProtection { pointcut awtComponentMethod(java.awt.Component component): target(component) &amp;&amp; call(* *.*(..)); before(java.awt.Component component): awtComponentMethod(component) { if (!SwingUtilities.isEventDispatchThread() &amp;&amp; component.isDisplayable()) { System.err.println("AWT Component method called from another Thread than the AWT-EventDispatchThread! source: " + thisJoinPoint.getSourceLocation() + ", target: " + thisJoinPoint.toLongString()); } } } ---------------- DETAILS (shortened because the size exceeded the 65k limit): java.lang.NullPointerException at at org.aspectj.weaver.bcel.BcelShadow.ensureTargetTypeIsCorrect(BcelShadow.java:1313) at at org.aspectj.weaver.bcel.BcelShadow.initializeTargetVar(BcelShadow.java:1274) at at org.aspectj.weaver.bcel.BcelShadow.getTargetVar(BcelShadow.java:968) at at org.aspectj.weaver.patterns.ThisOrTargetPointcut.findResidueInternal(ThisOrTargetPointcut.java:185) at at org.aspectj.weaver.patterns.Pointcut.findResidue(Pointcut.java:268) at at org.aspectj.weaver.patterns.AndPointcut.findResidueInternal(AndPointcut.java:97) at at org.aspectj.weaver.patterns.Pointcut.findResidue(Pointcut.java:268) at at org.aspectj.weaver.patterns.AndPointcut.findResidueInternal(AndPointcut.java:97) at at org.aspectj.weaver.patterns.Pointcut.findResidue(Pointcut.java:268) at at org.aspectj.weaver.bcel.BcelAdvice.specializeOn(BcelAdvice.java:132) at at org.aspectj.weaver.bcel.BcelShadow.prepareForMungers(BcelShadow.java:313) at at org.aspectj.weaver.Shadow.implement(Shadow.java:404) at at org.aspectj.weaver.bcel.BcelClassWeaver.implement(BcelClassWeaver.java:2146) at at org.aspectj.weaver.bcel.BcelClassWeaver.weave(BcelClassWeaver.java:467) at at org.aspectj.weaver.bcel.BcelClassWeaver.weave(BcelClassWeaver.java:102) at at org.aspectj.weaver.bcel.BcelWeaver.weave(BcelWeaver.java:1543) at at org.aspectj.weaver.bcel.BcelWeaver.weaveWithoutDump(BcelWeaver.java:1494) at at org.aspectj.weaver.bcel.BcelWeaver.weaveAndNotify(BcelWeaver.java:1275) at at org.aspectj.weaver.bcel.BcelWeaver.weave(BcelWeaver.java:1097) at at org.aspectj.ajdt.internal.compiler.AjCompilerAdapter.weave(AjCompilerAdapter.java:300) at at org.aspectj.ajdt.internal.compiler.AjCompilerAdapter.afterCompiling(AjCompilerAdapter.java:178) at at org.aspectj.ajdt.internal.compiler.CompilerAdapter.ajc$afterReturning$org_aspectj_ajdt_internal_compiler_CompilerAdapter$2$f9cc9ca0(CompilerAdapter.aj:70) at at org.aspectj.org.eclipse.jdt.internal.compiler.Compiler.compile(Compiler.java:367) at at org.aspectj.ajdt.internal.core.builder.AjBuildManager.performCompilation(AjBuildManager.java:811) at at org.aspectj.ajdt.internal.core.builder.AjBuildManager.doBuild(AjBuildManager.java:230) at at org.aspectj.ajdt.internal.core.builder.AjBuildManager.batchBuild(AjBuildManager.java:156) at at org.aspectj.ajde.internal.CompilerAdapter.compile(CompilerAdapter.java:122) at at org.aspectj.ajde.internal.AspectJBuildManager$CompilerThread.run(AspectJBuildManager.java:191) trouble in: public class com.sun.imageio.plugins.gif.GIFImageMetadata extends javax.imageio.metadata.IIOMetadata:</description>
-        </buginformation>
-        <fixedFiles>
-            <file>weaver/src/org/aspectj/weaver/bcel/BcelShadow.java</file>
-        </fixedFiles>
-    </bug>
     <bug commit="693945f" fixdate="1138530000" id="123901" opendate="1137330000" status="resolved fixed">
         <buginformation>
             <summary>Bug 123901 NPE in AccessForInlineVisitor.endVisit(AccessForInlineVisitor.java:105)</summary>
@@ -3039,16 +3030,6 @@
             <file>tests/bugs151/pr124803/TestAspect2.java</file>
             <file>tests/src/org/aspectj/systemtest/ajc151/Ajc151Tests.java</file>
             <file>weaver/src/org/aspectj/weaver/ReferenceType.java</file>
-        </fixedFiles>
-    </bug>
-    <bug commit="04067a6" fixdate="1137610000" id="122347" opendate="1135900000" status="resolved wontfix">
-        <buginformation>
-            <summary>Bug 122347 Contribution: Memory Efficient Expendable Type Map</summary>
-            <description>Here is a patch for a single file (weaver/src/org/aspectj/weaver/World) that significantly improves the memory footprint of weaves (see details below). I would like help in resolving the one bug that this hit in the AspectJ weaver tests. It does the following: * Keeps Weak References to the values in the expendable map to allow evicting them (whereas the Weak Hash Map keeps weak references only to the keys) * Allows configuring the expendable map to keep hard references to up to N types with -Dorg.aspectj.weaver.World.cacheRetention=number (the current default is 0). It's a nice tuning option so projects can use a bit more memory to avoid evicting types. * Moves the isExpendible check from the typeMap to the world, to allow different worlds (such as the LTWWorld) to change what's evictable (this lets the LTWWorld not keep references to already defined classes) This change breaks 3 tests in the "run these tests before checking in code" suite, all of them an NPE in the same line of ReferenceType.getTypeVariables for generic signatures. Presumably this code is implicitly relying on "expendable" types never being evicted. I have attached the error output for all 3 cases. My initial tests have shown a relatively small performance loss in return for significant memory footprint gains. E.g., using the AspectJ in CVS HEAD with the standard BcelWorld implementation (not LTWWorld) as the world, in Tomcat with the Glassbox Inspector &amp; 4 web apps the AspectJ overhead with this optimization is 48 million heap bytes (of 60 million total heap bytes) versus 61 million bytes using CVS HEAD. The optimization has limited benefit for a BcelWorld where almost all the code is exposed to the weaver (since few types are expendible). However, Martin Lippert tried a version of this in his AJEER Eclipse load-time weaving environment and reported a reduction from 230 MB of heap to 30 MB heap used at a cost of a 25% increase in start up time. Likewise, this facility is the major contributor to enabling my other LTW optimizations that can reduce the heap overhead in my test case to 9 million heap bytes (principally having the LTW world allow evicting types that are already woven and using reflective proxies). I see similar start up times when using this expendable map in my tests. The ability to increase the number of hard references in cache should provide users an ability to allocate more memory to speed up performance. Note that the only hard reference to the keys (the signatures) is from the values (at least I haven't noticed any cases in my load-time weaving tests), so the weak hash map is compacting itself properly: when the reference type is weakly reachable, the key is then weakly reachable and the map ultimately purges theses entries.</description>
-        </buginformation>
-        <fixedFiles>
-            <file>weaver/src/org/aspectj/weaver/World.java</file>
-            <file>weaver/src/org/aspectj/weaver/bcel/BcelWorld.java</file>
         </fixedFiles>
     </bug>
     <bug commit="ab2f89b" fixdate="1137510000" id="123612" opendate="1137080000" status="resolved fixed">
@@ -3169,15 +3150,6 @@
             <file>weaver/src/org/aspectj/weaver/reflect/ReflectionWorld.java</file>
             <file>weaver/testsrc/org/aspectj/weaver/reflect/ReflectionBasedReferenceTypeDelegateTest.java</file>
             <file>weaver/testsrc/org/aspectj/weaver/reflect/ReflectionWorldTest.java</file>
-        </fixedFiles>
-    </bug>
-    <bug commit="588e7b9" fixdate="1134510000" id="120743" opendate="1134510000" status="closed wontfix">
-        <buginformation>
-            <summary>Bug 120743 Improvements to define new server wizard page</summary>
-            <description>On the panel where the server location and button to install the server is shown, a couple of usability improvements could be made... (1) If I choose browse and choose a location. Then hit install server, the fs browser should not be brought back up since I have already hitten browse and selected a location. (2) If (1) and the location chosen contains no server, and the server is downlodable, classpath validation errors should not show, but a message stating that no server is found but can be installed by selecting the install server button.</description>
-        </buginformation>
-        <fixedFiles>
-            <file>loadtime/src/org/aspectj/weaver/loadtime/Aj.java</file>
         </fixedFiles>
     </bug>
     <bug commit="bdafe31" fixdate="1134510000" id="120693" opendate="1134500000" status="resolved fixed">
@@ -3369,16 +3341,6 @@
             <description>In ReflectionBasedReferenceTypeDelegateFactory this line (44) of code is breaking my use of the weaver for looking up bootstrap classes (where the classloader is null and the AspectJ weaver isn't accessible to the bootstrap loader). The commented out code works just fine for me. Is there a real need to resolve the AspectJ runtime from a different classloader than the one that was already used to load this class from the AspectJ runtime? Class delegateClass = Class.forName("org.aspectj.weaver.reflect.Java15ReflectionBasedReferenceTypeDelegate",false,usingClassLoader);//ReflectionBasedReferenceTypeDelegate.class.getClassLoader());</description>
         </buginformation>
         <fixedFiles>
-            <file>weaver/src/org/aspectj/weaver/reflect/ReflectionBasedReferenceTypeDelegateFactory.java</file>
-        </fixedFiles>
-    </bug>
-    <bug commit="508dbcb" fixdate="1133180000" id="11280" opendate="1016040000" status="resolved wontfix">
-        <buginformation>
-            <summary>Bug 11280 [View Mgmt] Switching perspectives loses view maximized state</summary>
-            <description>1. Open the CVS repository view in the Java perspective. 2. Double click the title bar to maximize it 3. Switch to the resource perspective. 4. Come back to the Java perspective. The CVS repository view is no longer maximized. A view that is maximized should stay maximized.</description>
-        </buginformation>
-        <fixedFiles>
-            <file>tests/src/org/aspectj/systemtest/ajc150/Ajc150Tests.java</file>
             <file>weaver/src/org/aspectj/weaver/reflect/ReflectionBasedReferenceTypeDelegateFactory.java</file>
         </fixedFiles>
     </bug>
@@ -6509,15 +6471,6 @@
             <file>tests/bugs/perCflowAndJar/PerCFlowCompileFromJarTest.java</file>
         </fixedFiles>
     </bug>
-    <bug commit="9df9062" fixdate="1061610000" id="41888" opendate="1061610000" status="resolved wontfix">
-        <buginformation>
-            <summary>Bug 41888 call PCD fails when given subtype of defining type</summary>
-            <description />
-        </buginformation>
-        <fixedFiles>
-            <file>tests/bugs/CallReference.java</file>
-        </fixedFiles>
-    </bug>
     <bug commit="d90acdc" fixdate="1061480000" id="39436" opendate="1056740000" status="verified fixed">
         <buginformation>
             <summary>Bug 39436 [Tasks] No summary shown in status line</summary>
@@ -6649,16 +6602,6 @@
             <file>org.aspectj.ajdt.core/testdata/bug-40257/d3/C.java</file>
             <file>org.aspectj.ajdt.core/testsrc/org/aspectj/ajdt/ajc/AjdtAjcTests.java</file>
             <file>org.aspectj.ajdt.core/testsrc/org/aspectj/ajdt/ajc/BuildArgParserTestCase.java</file>
-        </fixedFiles>
-    </bug>
-    <bug commit="40fb451" fixdate="1060130000" id="41170" opendate="1060130000" status="resolved wontfix">
-        <buginformation>
-            <summary>Bug 41170 -classpath entries in .lst files overwrite command-line -classpath entries</summary>
-            <description>If the command-line specifies both a -classpath entry and a .lst file with a -classpath entry, the .lst file entry seems to replace rather than supplement the command-line entry. I expect options to be cumulative. See tests/bugs/options/classpath</description>
-        </buginformation>
-        <fixedFiles>
-            <file>tests/bugs/options/classpath/Client.java</file>
-            <file>tests/bugs/options/classpath/lib/Library.java</file>
         </fixedFiles>
     </bug>
     <bug commit="a26cac9" fixdate="1059590000" id="38717" opendate="1055260000" status="resolved fixed">
