@@ -45,12 +45,14 @@ data_link = data["files"]
 data_summary = data["summary"]
 data_description = data["description"]
 data_id = data["bug_id"]
-data_opendate = data["report_time"]
-data_fixdate = data["report_time"]
+data_opendate = data["report_timestamp"]
+data_fixdate = data["commit_timestamp"]
+data_commit = data["commit"]
+data_status = data["status"]
 count = 0
 max_file = 0
 bug_id = 0
-for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description, data_id, data_opendate, data_fixdate):
+for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, data_description, data_id, data_opendate, data_fixdate, data_commit, data_status):
     # if(not desc or pd.isnull(desc)):
     #     continue
 
@@ -59,10 +61,10 @@ for files, summ, desc, i, o, f in zip(data_link, data_summary, data_description,
     # print(i, o, f)
     bug = ET.SubElement(bugrepository, 'bug')
     bug.set('id', str(i))
-    bug.set('opendate', o)
-    bug.set('fixdate', f)
-
-
+    bug.set('opendate', str(o))
+    bug.set('fixdate', str(f))
+    bug.set('status', status)
+    bug.set('commit', commit)
 
     buginformation = ET.SubElement(bug, 'buginformation')
     summary = ET.SubElement(buginformation, 'summary')
