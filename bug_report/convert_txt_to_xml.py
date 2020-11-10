@@ -57,6 +57,13 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
     #     continue
     if status not in ['resolved fixed', 'verified fixed', 'closed fixed']:
         continue
+    array_file = divide_link(files)
+    length = len(array_file)
+    for file_ in array_file:
+        if file_.find('tests/') == 0:
+            length = length - 1
+    if length < 1:
+        continue
     count += 1
     # bug
     # print(i, o, f)
@@ -77,12 +84,14 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
 
     # print(divide_link(files))
     array_file = divide_link(files)
+    print(len(array_file))
     if(len(array_file) > max_file):
         max_file = len(array_file)
         bug_id = i
     for file_ in array_file:
-        file_name = ET.SubElement(fixedFiles, 'file')
-        file_name.text = file_
+        if file_.find('tests/') != 0:
+            file_name = ET.SubElement(fixedFiles, 'file')
+            file_name.text = file_
 
     # print(files)
     # print(summary)
