@@ -6,8 +6,14 @@ import html
 import re
 import xml.etree.ElementTree as ET
 
+#AspectJ
+#Eclipse_Platform_UI
+#JDT
+#SWT
+#Tomcat
+
 bugrepository = ET.Element('bugrepository')
-bugrepository.set('name', 'AspectJ')
+bugrepository.set('name', 'SWT')
 
 
 def unescape(s):
@@ -38,7 +44,7 @@ files = glob(path)
 #     print(file)
 #     print(df)
 
-data = pd.read_csv("..\Dataset\dataset\AspectJ.txt", sep="\t")
+data = pd.read_csv("..\Dataset\dataset\SWT.txt", sep="\t")
 data_link = data["files"]
 # data_link = np.array(data_link)
 # data_commit = data["commit"]
@@ -57,13 +63,13 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
     #     continue
     if status not in ['resolved fixed', 'verified fixed', 'closed fixed']:
         continue
-    array_file = divide_link(files)
-    length = len(array_file)
-    for file_ in array_file:
-        if file_.find('tests/') == 0:
-            length = length - 1
-    if length < 1:
-        continue
+    # array_file = divide_link(files)
+    # length = len(array_file)
+    # for file_ in array_file:
+    #     if file_.find('tests/') == 0:
+    #         length = length - 1
+    # if length < 1:
+    #     continue
     count += 1
     # bug
     # print(i, o, f)
@@ -84,14 +90,12 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
 
     # print(divide_link(files))
     array_file = divide_link(files)
-    print(len(array_file))
     if(len(array_file) > max_file):
         max_file = len(array_file)
         bug_id = i
     for file_ in array_file:
-        if file_.find('tests/') != 0:
-            file_name = ET.SubElement(fixedFiles, 'file')
-            file_name.text = file_
+        file_name = ET.SubElement(fixedFiles, 'file')
+        file_name.text = file_
 
     # print(files)
     # print(summary)
@@ -103,5 +107,5 @@ print("bug_id", bug_id)
 mydata = ET.tostring(bugrepository)
 
 # print(mydata)
-myfile = open("AspectJ_v2.xml", "wb")
+myfile = open("SWT.xml", "wb")
 myfile.write(mydata)

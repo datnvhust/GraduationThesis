@@ -7,28 +7,28 @@
         "source_length": 2352
     },
     "Eclipse_Platform_UI": {
-        "row_bugs": 6495,
+        "row_bugs": 6457,
         "row+bugs_desc": 5252,
-        "max_file": 202,
-        "max_file_bug_id": 123442
+        "max_file": 308,
+        "max_file_bug_id": 315281
     },
     "JDT": {
-        "row_bugs": 6274,
+        "row_bugs": 6219,
         "row+bugs_desc": 5351,
-        "max_file": 80,
-        "max_file_bug_id": 77950
+        "max_file": 97,
+        "max_file_bug_id": 335173
     },
     "SWT": {
-        "row_bugs": 4151,
+        "row_bugs": 4098,
         "row+bugs_desc": 3268,
         "max_file": 215,
         "max_file_bug_id": 269106
     },
     "Tomcat": {
-        "row_bugs": 1056,
+        "row_bugs": 1044,
         "row+bugs_desc": 528,
-        "max_file": 51,
-        "max_file_bug_id": 49142,
+        "max_file": 94,
+        "max_file_bug_id": 48137,
         "source_length": 2567
     }
 }
