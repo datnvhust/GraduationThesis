@@ -5,15 +5,19 @@ import cgi
 import html
 import re
 import xml.etree.ElementTree as ET
+import datetime
 
-#AspectJ
+#AspectJ 7-2002 to 10-2006
 #Eclipse_Platform_UI
 #JDT
 #SWT
 #Tomcat
 
+min_date = datetime.datetime(2002, 7, 1).timestamp()
+max_date = datetime.datetime(2006, 10, 1).timestamp()
+
 bugrepository = ET.Element('bugrepository')
-bugrepository.set('name', 'SWT')
+bugrepository.set('name', 'AspectJ')
 
 
 def unescape(s):
@@ -44,7 +48,7 @@ files = glob(path)
 #     print(file)
 #     print(df)
 
-data = pd.read_csv("..\Dataset\dataset\SWT.txt", sep="\t")
+data = pd.read_csv("..\Dataset\dataset\AspectJ.txt", sep="\t")
 data_link = data["files"]
 # data_link = np.array(data_link)
 # data_commit = data["commit"]
@@ -63,13 +67,15 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
     #     continue
     if status not in ['resolved fixed', 'verified fixed', 'closed fixed']:
         continue
-    # array_file = divide_link(files)
-    # length = len(array_file)
-    # for file_ in array_file:
-    #     if file_.find('tests/') == 0:
-    #         length = length - 1
-    # if length < 1:
-    #     continue
+    if o < min_date or o > max_date:
+        continue
+    array_file = divide_link(files)
+    length = len(array_file)
+    for file_ in array_file:
+        if file_.find('tests/') != -1 or file_.find('testsrc/') != -1 or file_.find('testing/') != -1 or file_.find('testdata/') != -1:
+            length = length - 1
+    if length < 1:
+        continue
     count += 1
     # bug
     # print(i, o, f)
@@ -83,7 +89,7 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
     buginformation = ET.SubElement(bug, 'buginformation')
     summary = ET.SubElement(buginformation, 'summary')
     description = ET.SubElement(buginformation, 'description')
-    summary.text = summ
+    summary.text = summ[4:]
     description.text = '' if (not desc or pd.isnull(desc)) else unescape(desc)
     # source
     fixedFiles = ET.SubElement(bug, 'fixedFiles')
@@ -94,8 +100,9 @@ for files, summ, desc, i, o, f, commit, status in zip(data_link, data_summary, d
         max_file = len(array_file)
         bug_id = i
     for file_ in array_file:
-        file_name = ET.SubElement(fixedFiles, 'file')
-        file_name.text = file_
+        if file_.find('tests/') == -1 and file_.find('testsrc/') == -1 and file_.find('testing/') == -1 and file_.find('testdata/') == -1:
+            file_name = ET.SubElement(fixedFiles, 'file')
+            file_name.text = file_
 
     # print(files)
     # print(summary)
@@ -107,5 +114,5 @@ print("bug_id", bug_id)
 mydata = ET.tostring(bugrepository)
 
 # print(mydata)
-myfile = open("SWT.xml", "wb")
+myfile = open("AspectJ.xml", "wb")
 myfile.write(mydata)

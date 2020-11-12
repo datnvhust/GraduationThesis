@@ -10,7 +10,8 @@
         "row_bugs": 6457,
         "row+bugs_desc": 5252,
         "max_file": 308,
-        "max_file_bug_id": 315281
+        "max_file_bug_id": 315281,
+        "source_last_commit": 6052
     },
     "JDT": {
         "row_bugs": 6219,
@@ -22,13 +23,15 @@
         "row_bugs": 4098,
         "row+bugs_desc": 3268,
         "max_file": 215,
-        "max_file_bug_id": 269106
+        "max_file_bug_id": 269106,
+        "source_last_commit": 1406
     },
     "Tomcat": {
         "row_bugs": 1044,
         "row+bugs_desc": 528,
         "max_file": 94,
         "max_file_bug_id": 48137,
-        "source_length": 2567
+        "source_length": 2567,
+        "source_last_commit": 1036
     }
 }
